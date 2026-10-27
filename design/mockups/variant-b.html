@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Variant B - Paper</title>
+<style>
+  :root {
+    --bg: rgba(248, 246, 240, 0.96);
+    --panel: #ffffff;
+    --line: #e4e0d6;
+    --text: #2b2b2b;
+    --dim: #8a867c;
+    --accent: #3a6ea5;
+    --done: #4f9a5a;
+    --blocked: #c75440;
+    --lab: #2a9d8f;
+    --class: #7b61c9;
+    --remote: #d9822b;
+  }
+  body { margin: 0; padding: 24px; background: #5b6474; font-family: "Microsoft YaHei UI", "Segoe UI", sans-serif; display: flex; gap: 24px; align-items: flex-start; }
+  .widget { width: 420px; background: var(--bg); border-radius: 8px; padding: 14px 16px 12px; box-sizing: border-box; color: var(--text); font-size: 13px; }
+  .head { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+  .date { font-size: 26px; font-weight: 300; line-height: 1; }
+  .date small { display: block; font-size: 11px; color: var(--dim); margin-top: 4px; letter-spacing: .5px; }
+  .ring { width: 38px; height: 38px; border-radius: 50%; background: conic-gradient(var(--done) 0 40%, var(--line) 40% 100%); display: grid; place-items: center; }
+  .ring span { width: 30px; height: 30px; border-radius: 50%; background: var(--bg); display: grid; place-items: center; font-size: 11px; color: var(--dim); }
+  .tabs { display: flex; gap: 16px; margin: 10px 0 6px; font-size: 12px; color: var(--dim); }
+  .tabs .on { color: var(--text); font-weight: 600; border-bottom: 2px solid var(--accent); padding-bottom: 2px; }
+  .tabs .act { margin-left: auto; color: var(--accent); font-weight: 400; }
+  .row { display: flex; align-items: center; gap: 9px; height: 30px; border-left: 3px solid transparent; padding-left: 7px; }
+  .row.lab { border-color: var(--lab); }
+  .row.class { border-color: var(--class); }
+  .row.remote { border-color: var(--remote); }
+  .row.hover { background: #efece4; }
+  .box { width: 14px; height: 14px; border: 1.5px solid var(--dim); border-radius: 3px; box-sizing: border-box; flex: none; display: grid; place-items: center; font-size: 10px; color: #fff; }
+  .box.done { background: var(--done); border-color: var(--done); }
+  .box.doing { border-color: var(--accent); background: linear-gradient(135deg, var(--accent) 50%, transparent 50%); }
+  .box.blocked { border-color: var(--blocked); color: var(--blocked); }
+  .title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .title.done { color: var(--dim); text-decoration: line-through; }
+  .meta { font-size: 11px; color: var(--dim); text-align: right; flex: none; }
+  .legend { display: flex; gap: 12px; font-size: 10px; color: var(--dim); margin: 6px 0 0 10px; }
+  .legend i { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+  .askbar { margin-top: 10px; display: flex; align-items: center; gap: 10px; border: 1px solid var(--line); background: var(--panel); border-radius: 6px; padding: 7px 10px; }
+  .askbar .ph { flex: 1; color: var(--dim); }
+  .tag { font-size: 11px; color: var(--accent); }
+  .chat { margin-top: 8px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; line-height: 1.55; }
+  .who { font-weight: 600; color: var(--accent); }
+  .tool { font-size: 11px; color: var(--dim); margin: 3px 0 3px 10px; font-family: Consolas, monospace; }
+  .foot { font-size: 10px; color: var(--dim); margin-top: 6px; display: flex; justify-content: space-between; }
+  .timeline { position: relative; margin: 6px 0 0 54px; }
+  .tl-row { position: relative; height: 34px; display: flex; align-items: center; }
+  .tl-row .t { position: absolute; left: -54px; font-size: 11px; color: var(--dim); width: 46px; text-align: right; }
+  .bar { height: 26px; border-radius: 4px; display: flex; align-items: center; padding: 0 8px; font-size: 12px; color: #fff; }
+  .bar.lab { background: var(--lab); }
+  .bar.class { background: var(--class); }
+  .bar.remote { background: var(--remote); }
+  .bar.commute { background: repeating-linear-gradient(45deg, #ddd8cc 0 6px, #e9e5db 6px 12px); color: var(--dim); }
+  .section { font-size: 11px; color: var(--dim); margin: 10px 0 4px; }
+  .change { display: flex; gap: 8px; align-items: center; height: 26px; font-size: 12px; }
+  .apply { display: flex; justify-content: flex-end; gap: 14px; font-size: 12px; margin-top: 4px; }
+  .apply .primary { color: #fff; background: var(--accent); padding: 3px 12px; border-radius: 4px; }
+  .apply .ghost { color: var(--dim); padding: 3px 0; }
+</style>
+</head>
+<body>
+
+<div class="widget">
+  <div class="head">
+    <div class="date">10 / 20<small>TUESDAY · 2026-W43</small></div>
+    <div class="ring"><span>2/5</span></div>
+  </div>
+  <div class="tabs"><span class="on">Today</span><span>Week</span><span>Long</span><span>Plan</span><span class="act">＋ Add · Sync</span></div>
+
+  <div class="row remote"><span class="box done">✓</span><span class="title done">回复导师邮件</span><span class="meta">20m</span></div>
+  <div class="row lab hover"><span class="box doing"></span><span class="title">跑对比实验 B（已跑 3/5）</span><span class="meta">2h · 顺延 2</span></div>
+  <div class="row class"><span class="box"></span><span class="title">机器学习作业 3</span><span class="meta">90m</span></div>
+  <div class="row lab"><span class="box blocked">!</span><span class="title">申请服务器账号</span><span class="meta">10-17</span></div>
+  <div class="row remote"><span class="box done">✓</span><span class="title done">读 2 篇相关论文</span><span class="meta">1h</span></div>
+  <div class="legend"><span><i style="background:var(--lab)"></i>lab</span><span><i style="background:var(--class)"></i>class</span><span><i style="background:var(--remote)"></i>remote</span></div>
+
+  <div class="askbar"><span class="ph">问点什么…</span><span class="tag">assistant ▾</span><span class="tag">Tasks ✓</span><span class="tag">历史</span></div>
+  <div class="chat">
+    <div><span class="who">You</span> 把 research 里“对比实验设计”的待办整理成今天的任务</div>
+    <div class="tool">→ read_file research/2026-10-19-对比实验设计.md</div>
+    <div class="tool">→ add_task day "补跑 baseline seed 3" lab 40m</div>
+    <div><span class="who">AI</span> 已添加 1 条今日任务“补跑 baseline seed 3”（lab，约 40 分钟）。笔记里另外两项已在本周任务中。</div>
+    <div class="foot"><span>2 tools · 1.2k / 96 tokens</span><span>收起</span></div>
+  </div>
+</div>
+
+<div class="widget">
+  <div class="head">
+    <div class="date">10 / 20<small>PLAN · 校园日 · 通勤 2h</small></div>
+    <div class="ring"><span>6</span></div>
+  </div>
+  <div class="tabs"><span>Today</span><span>Week</span><span>Long</span><span class="on">Plan</span><span class="act">重新生成</span></div>
+
+  <div class="timeline">
+    <div class="tl-row"><span class="t">08:00</span><div class="bar commute" style="width:120px">通勤</div></div>
+    <div class="tl-row"><span class="t">09:00</span><div class="bar lab" style="width:240px">跑对比实验 B</div></div>
+    <div class="tl-row"><span class="t">11:10</span><div class="bar class" style="width:180px">机器学习（课）</div></div>
+    <div class="tl-row"><span class="t">13:30</span><div class="bar lab" style="width:90px">补跑 seed 3</div></div>
+    <div class="tl-row"><span class="t">14:10</span><div class="bar class" style="width:180px">机器学习作业 3</div></div>
+    <div class="tl-row"><span class="t">17:00</span><div class="bar commute" style="width:120px">通勤</div></div>
+  </div>
+
+  <div class="section">建议改动</div>
+  <div class="change"><span class="box done">✓</span>“读论文”改到明天 remote 日</div>
+  <div class="change"><span class="box done">✓</span>新增今日任务“整理组会记录” · lab · 30m</div>
+  <div class="change"><span class="box"></span>“申请服务器账号”估时 15m</div>
+  <div class="apply"><span class="ghost">放弃</span><span class="primary">应用 2 项</span></div>
+
+  <div class="askbar"><span class="ph">问点什么…</span><span class="tag">planner ▾</span><span class="tag">历史</span></div>
+</div>
+
+</body>
+</html>

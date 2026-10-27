@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Variant C - Compact Glass</title>
+<style>
+  :root {
+    --bg: rgba(10, 12, 16, 0.62);
+    --panel: rgba(255, 255, 255, 0.06);
+    --line: rgba(255, 255, 255, 0.10);
+    --text: #f2f2f2;
+    --dim: #9aa0a8;
+    --accent: #8fd3ff;
+    --done: #8ee08e;
+    --blocked: #ff8a7a;
+    --lab: #5eead4;
+    --class: #c4b5fd;
+    --remote: #fdba74;
+  }
+  body { margin: 0; padding: 24px; background: linear-gradient(135deg, #445566, #6b5b7b 60%, #8a6f5a); font-family: "Segoe UI", "Microsoft YaHei UI", sans-serif; display: flex; gap: 24px; align-items: flex-start; }
+  .widget { width: 420px; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; box-sizing: border-box; color: var(--text); font-size: 12.5px; }
+  .head { display: flex; align-items: center; gap: 10px; }
+  .date { font-size: 15px; font-weight: 600; }
+  .wk { color: var(--dim); font-size: 11px; }
+  .seg { margin-left: auto; display: flex; background: var(--panel); border-radius: 6px; padding: 2px; font-size: 11px; }
+  .seg span { padding: 2px 8px; border-radius: 4px; color: var(--dim); }
+  .seg .on { background: rgba(143, 211, 255, 0.18); color: var(--accent); }
+  .bars { display: flex; gap: 3px; margin: 8px 0 6px; }
+  .bars i { flex: 1; height: 3px; border-radius: 2px; background: var(--line); }
+  .bars i.d { background: var(--done); }
+  .bars i.p { background: var(--accent); }
+  .row { display: grid; grid-template-columns: 18px 18px 1fr auto; align-items: center; gap: 6px; height: 25px; padding: 0 4px; border-radius: 4px; }
+  .row.hover { background: var(--panel); }
+  .st { font-size: 13px; text-align: center; color: var(--dim); }
+  .st.done { color: var(--done); }
+  .st.doing { color: var(--accent); }
+  .st.blocked { color: var(--blocked); }
+  .pl { width: 16px; height: 16px; border-radius: 50%; font-size: 9px; font-weight: 700; display: grid; place-items: center; color: #111; }
+  .pl.L { background: var(--lab); }
+  .pl.C { background: var(--class); }
+  .pl.R { background: var(--remote); }
+  .title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .title.done { color: var(--dim); text-decoration: line-through; }
+  .meta { font-size: 10.5px; color: var(--dim); }
+  .meta b { color: var(--remote); font-weight: 400; }
+  .askbar { margin-top: 8px; display: flex; align-items: center; gap: 8px; border-top: 1px solid var(--line); padding-top: 8px; }
+  .prompt { color: var(--accent); font-family: Consolas, monospace; }
+  .askbar .ph { flex: 1; color: var(--dim); }
+  .k { font-size: 10.5px; color: var(--dim); background: var(--panel); border-radius: 4px; padding: 1px 6px; }
+  .chat { margin-top: 6px; line-height: 1.5; }
+  .msg { padding: 4px 0; }
+  .who { color: var(--accent); font-weight: 600; margin-right: 4px; }
+  .tool { font-family: Consolas, monospace; font-size: 10.5px; color: var(--dim); padding-left: 14px; }
+  .tool .ok { color: var(--done); }
+  .foot { font-size: 10px; color: var(--dim); display: flex; justify-content: space-between; margin-top: 4px; }
+  .tl { margin-top: 4px; }
+  .tl-row { display: grid; grid-template-columns: 40px 12px 1fr auto; gap: 6px; align-items: center; height: 24px; }
+  .tl-row .t { font-size: 10.5px; color: var(--dim); text-align: right; }
+  .tl-row .node { width: 8px; height: 8px; border-radius: 50%; justify-self: center; }
+  .node.lab { background: var(--lab); }
+  .node.class { background: var(--class); }
+  .node.commute { border: 1.5px dashed var(--dim); box-sizing: border-box; width: 10px; height: 10px; }
+  .tl-row .d { font-size: 10.5px; color: var(--dim); }
+  .tl-row.commute .x { color: var(--dim); font-style: italic; }
+  .section { font-size: 10.5px; color: var(--dim); margin: 8px 0 2px; text-transform: uppercase; letter-spacing: 1px; }
+  .change { display: grid; grid-template-columns: 16px 1fr; gap: 6px; align-items: center; height: 22px; }
+  .change .c { color: var(--accent); }
+  .apply { display: flex; justify-content: flex-end; gap: 10px; font-size: 11px; margin-top: 4px; }
+  .apply .primary { color: var(--accent); background: rgba(143, 211, 255, 0.15); padding: 2px 10px; border-radius: 4px; }
+  .apply .ghost { color: var(--dim); padding: 2px 0; }
+</style>
+</head>
+<body>
+
+<div class="widget">
+  <div class="head">
+    <span class="date">Tue 10-20</span><span class="wk">W43 · 2/5 · ↻1</span>
+    <div class="seg"><span class="on">Day</span><span>Week</span><span>Long</span><span>Plan</span></div>
+  </div>
+  <div class="bars"><i class="d"></i><i class="d"></i><i class="p"></i><i></i><i></i></div>
+
+  <div class="row"><span class="st done">●</span><span class="pl R">R</span><span class="title done">回复导师邮件</span><span class="meta">20m</span></div>
+  <div class="row hover"><span class="st doing">◐</span><span class="pl L">L</span><span class="title">跑对比实验 B（已跑 3/5）</span><span class="meta">2h <b>↻2</b></span></div>
+  <div class="row"><span class="st">○</span><span class="pl C">C</span><span class="title">机器学习作业 3</span><span class="meta">90m</span></div>
+  <div class="row"><span class="st blocked">⊘</span><span class="pl L">L</span><span class="title">申请服务器账号</span><span class="meta">10-17</span></div>
+  <div class="row"><span class="st done">●</span><span class="pl R">R</span><span class="title done">读 2 篇相关论文</span><span class="meta">1h</span></div>
+
+  <div class="askbar"><span class="prompt">›</span><span class="ph">问点什么…</span><span class="k">assistant</span><span class="k">tasks</span><span class="k">≡</span></div>
+  <div class="chat">
+    <div class="msg"><span class="who">You</span>把 research 里“对比实验设计”的待办整理成今天的任务</div>
+    <div class="tool"><span class="ok">✓</span> read_file research/2026-10-19-对比实验设计.md</div>
+    <div class="tool"><span class="ok">✓</span> add_task day "补跑 baseline seed 3" lab 40m</div>
+    <div class="msg"><span class="who">AI</span>已添加 1 条今日任务“补跑 baseline seed 3”（lab，约 40 分钟）。笔记里另外两项已在本周任务中。</div>
+    <div class="foot"><span>2 tools · 1.2k/96 · 1.4s</span><span>▴</span></div>
+  </div>
+</div>
+
+<div class="widget">
+  <div class="head">
+    <span class="date">Tue 10-20</span><span class="wk">校园日 · 通勤 2h</span>
+    <div class="seg"><span>Day</span><span>Week</span><span>Long</span><span class="on">Plan</span></div>
+  </div>
+  <div class="bars"><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i></div>
+
+  <div class="tl">
+    <div class="tl-row commute"><span class="t">08:00</span><span class="node commute"></span><span class="x">通勤 remote → 校园</span><span class="d">60m</span></div>
+    <div class="tl-row"><span class="t">09:00</span><span class="node lab"></span><span>跑对比实验 B</span><span class="d">2h</span></div>
+    <div class="tl-row"><span class="t">11:10</span><span class="node class"></span><span>机器学习（课）</span><span class="d">90m</span></div>
+    <div class="tl-row"><span class="t">13:30</span><span class="node lab"></span><span>补跑 baseline seed 3</span><span class="d">40m</span></div>
+    <div class="tl-row"><span class="t">14:10</span><span class="node class"></span><span>机器学习作业 3</span><span class="d">90m</span></div>
+    <div class="tl-row commute"><span class="t">17:00</span><span class="node commute"></span><span class="x">通勤 校园 → remote</span><span class="d">60m</span></div>
+  </div>
+
+  <div class="section">Changes</div>
+  <div class="change"><span class="c">☑</span>“读论文”改到明天 remote 日</div>
+  <div class="change"><span class="c">☑</span>新增今日任务“整理组会记录” · lab · 30m</div>
+  <div class="change"><span class="c">☐</span>“申请服务器账号”估时 15m</div>
+  <div class="apply"><span class="ghost">discard</span><span class="primary">apply 2</span></div>
+
+  <div class="askbar"><span class="prompt">›</span><span class="ph">问点什么…</span><span class="k">planner</span><span class="k">≡</span></div>
+</div>
+
+</body>
+</html>

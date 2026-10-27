@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Variant A - Midnight Card</title>
+<style>
+  :root {
+    --bg: rgba(18, 20, 26, 0.92);
+    --panel: #1c1f27;
+    --line: #2a2e38;
+    --text: #e8e8ec;
+    --dim: #8b8f9a;
+    --accent: #6eb4ff;
+    --done: #78c878;
+    --blocked: #f07864;
+    --lab: #3cc8b4;
+    --class: #a98bff;
+    --remote: #ffa94d;
+  }
+  body { margin: 0; padding: 24px; background: #3b4252; font-family: "Microsoft YaHei UI", "Segoe UI", sans-serif; display: flex; gap: 24px; align-items: flex-start; }
+  .widget { width: 420px; background: var(--bg); border-radius: 14px; padding: 14px 14px 12px; box-sizing: border-box; color: var(--text); font-size: 13px; }
+  .head { display: flex; justify-content: space-between; align-items: baseline; }
+  .date { font-size: 20px; font-weight: 600; }
+  .date small { font-size: 12px; color: var(--dim); font-weight: 400; margin-left: 6px; }
+  .actions { color: var(--accent); font-size: 12px; display: flex; gap: 12px; }
+  .progress { margin: 8px 0 10px; height: 4px; background: var(--line); border-radius: 2px; }
+  .progress i { display: block; height: 4px; width: 40%; background: var(--accent); border-radius: 2px; }
+  .progress-label { font-size: 11px; color: var(--dim); margin-top: -6px; margin-bottom: 8px; }
+  .tabs { display: flex; gap: 4px; margin-bottom: 8px; }
+  .tab { padding: 3px 10px; border-radius: 10px; color: var(--dim); font-size: 12px; }
+  .tab.on { background: #26324a; color: var(--accent); }
+  .row { display: flex; align-items: center; gap: 8px; height: 30px; padding: 0 6px; border-radius: 6px; }
+  .row.hover { background: #232733; }
+  .dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--dim); box-sizing: border-box; flex: none; }
+  .dot.doing { border-color: var(--accent); background: linear-gradient(90deg, var(--accent) 50%, transparent 50%); }
+  .dot.done { border-color: var(--done); background: var(--done); }
+  .dot.blocked { border-color: var(--blocked); }
+  .title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .title.done { color: var(--dim); text-decoration: line-through; }
+  .chip { font-size: 10px; padding: 1px 6px; border-radius: 8px; flex: none; }
+  .chip.lab { color: var(--lab); background: rgba(60, 200, 180, 0.15); }
+  .chip.class { color: var(--class); background: rgba(169, 139, 255, 0.15); }
+  .chip.remote { color: var(--remote); background: rgba(255, 169, 77, 0.15); }
+  .meta { font-size: 11px; color: var(--dim); width: 64px; text-align: right; flex: none; }
+  .meta b { color: var(--remote); font-weight: 400; }
+  .askbar { margin-top: 10px; display: flex; align-items: center; gap: 8px; background: var(--panel); border-radius: 10px; padding: 8px 10px; }
+  .askbar .ph { flex: 1; color: var(--dim); }
+  .pill { font-size: 11px; color: var(--accent); border: 1px solid #2f4a6e; border-radius: 9px; padding: 1px 7px; }
+  .chat { margin-top: 8px; background: var(--panel); border-radius: 10px; padding: 10px 12px; line-height: 1.55; }
+  .chat .who { color: var(--accent); }
+  .tool { font-size: 11px; color: var(--dim); margin: 4px 0; }
+  .tool::before { content: "⚙ "; }
+  .chat .foot { font-size: 10px; color: var(--dim); margin-top: 6px; display: flex; justify-content: space-between; }
+  .block { display: flex; gap: 10px; align-items: stretch; margin: 2px 0; }
+  .time { width: 78px; font-size: 11px; color: var(--dim); padding-top: 6px; flex: none; }
+  .slot { flex: 1; border-radius: 6px; padding: 5px 8px; border-left: 3px solid var(--dim); background: #20232c; }
+  .slot.lab { border-color: var(--lab); }
+  .slot.class { border-color: var(--class); }
+  .slot.remote { border-color: var(--remote); }
+  .slot.commute { border-left-style: dashed; background: transparent; color: var(--dim); font-size: 12px; }
+  .section { font-size: 11px; color: var(--dim); margin: 10px 0 4px; letter-spacing: .5px; }
+  .change { display: flex; gap: 8px; align-items: center; height: 26px; font-size: 12px; }
+  .box { width: 12px; height: 12px; border: 1.5px solid var(--accent); border-radius: 3px; flex: none; box-sizing: border-box; }
+  .box.on { background: var(--accent); }
+  .apply { margin-top: 8px; display: flex; justify-content: flex-end; gap: 10px; font-size: 12px; }
+  .btn { padding: 3px 12px; border-radius: 10px; background: #26324a; color: var(--accent); }
+  .btn.ghost { background: transparent; color: var(--dim); }
+</style>
+</head>
+<body>
+
+<div class="widget">
+  <div class="head">
+    <div class="date">10月20日<small>周二 · 2026-W43</small></div>
+    <div class="actions"><span>＋</span><span>Sync</span><span>⟳</span></div>
+  </div>
+  <div class="progress"><i></i></div>
+  <div class="progress-label">今日 2 / 5 完成 · 顺延 1</div>
+  <div class="tabs"><span class="tab on">Today</span><span class="tab">Week</span><span class="tab">Long</span><span class="tab">Plan</span></div>
+
+  <div class="row"><span class="dot done"></span><span class="title done">回复导师邮件</span><span class="chip remote">remote</span><span class="meta">20m</span></div>
+  <div class="row hover"><span class="dot doing"></span><span class="title">跑对比实验 B（已跑 3/5）</span><span class="chip lab">lab</span><span class="meta">2h · <b>↻2</b></span></div>
+  <div class="row"><span class="dot"></span><span class="title">机器学习作业 3</span><span class="chip class">class</span><span class="meta">90m</span></div>
+  <div class="row"><span class="dot blocked"></span><span class="title">申请服务器账号</span><span class="chip lab">lab</span><span class="meta">10-17</span></div>
+  <div class="row"><span class="dot done"></span><span class="title done">读 2 篇相关论文</span><span class="chip remote">remote</span><span class="meta">1h</span></div>
+
+  <div class="askbar"><span class="ph">问点什么…</span><span class="pill">assistant</span><span class="pill">Tasks</span><span class="pill">≡</span></div>
+  <div class="chat">
+    <div><span class="who">You:</span> 把 research 里“对比实验设计”的待办整理成今天的任务</div>
+    <div class="tool">read_file research/2026-10-19-对比实验设计.md</div>
+    <div class="tool">add_task day “补跑 baseline seed 3” · lab · 40m</div>
+    <div><span class="who">AI:</span> 已添加 1 条今日任务“补跑 baseline seed 3”（lab，约 40 分钟）。笔记里另外两项已在本周任务中。</div>
+    <div class="foot"><span>2 tools · in 1.2k / out 96</span><span>折叠 ▴</span></div>
+  </div>
+</div>
+
+<div class="widget">
+  <div class="head">
+    <div class="date">10月20日<small>周二 · 2026-W43</small></div>
+    <div class="actions"><span>生成计划</span><span>⟳</span></div>
+  </div>
+  <div class="progress"><i></i></div>
+  <div class="progress-label">计划：校园日 · 通勤 2 × 60m · 生成于 08:10</div>
+  <div class="tabs"><span class="tab">Today</span><span class="tab">Week</span><span class="tab">Long</span><span class="tab on">Plan</span></div>
+
+  <div class="block"><span class="time">08:00–09:00</span><div class="slot commute">通勤 remote → 校园</div></div>
+  <div class="block"><span class="time">09:00–11:00</span><div class="slot lab">跑对比实验 B</div></div>
+  <div class="block"><span class="time">11:10–12:40</span><div class="slot class">机器学习（课）</div></div>
+  <div class="block"><span class="time">13:30–14:10</span><div class="slot lab">补跑 baseline seed 3</div></div>
+  <div class="block"><span class="time">14:10–15:40</span><div class="slot class">机器学习作业 3</div></div>
+  <div class="block"><span class="time">17:00–18:00</span><div class="slot commute">通勤 校园 → remote</div></div>
+
+  <div class="section">建议改动</div>
+  <div class="change"><span class="box on"></span>“读论文”改到明天 remote 日</div>
+  <div class="change"><span class="box on"></span>新增今日任务“整理组会记录” · lab · 30m</div>
+  <div class="change"><span class="box"></span>“申请服务器账号”估时 15m</div>
+  <div class="apply"><span class="btn ghost">放弃</span><span class="btn">应用 2 项</span></div>
+
+  <div class="askbar"><span class="ph">问点什么…</span><span class="pill">planner</span><span class="pill">≡</span></div>
+</div>
+
+</body>
+</html>
